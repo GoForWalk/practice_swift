@@ -24,22 +24,6 @@ class BountyViewController: UIViewController, UITableViewDataSource, UITableView
     // > bountyViewModel을 만들고, View layer에서 필요한 메서드 만들기
     // > Model 가지고 있기 ,, BountyInfo 등.
     
-    
-    // 데이터 추가에 어려움 -> Struct로 교체
-//    let nameList = ["brook", "chopper", "franky", "luffy", "nami", "robin", "sanji", "zoro"]
-//    let bountyList = [33000000, 50, 4440000, 30000000, 16000000, 80000000, 77000000, 12000000]
-    
-//    let bountyInfoList: [BountyInfo] = [
-//        BountyInfo(name: "brook", bounty: 33000000),
-//        BountyInfo(name: "chopper", bounty: 50),
-//        BountyInfo(name: "franky", bounty: 4440000),
-//        BountyInfo(name: "luffy", bounty: 30000000),
-//        BountyInfo(name: "nami", bounty: 16000000),
-//        BountyInfo(name: "robin", bounty: 80000000),
-//        BountyInfo(name: "sanji", bounty: 77000000),
-//        BountyInfo(name: "zoro", bounty: 120000000)
-//    ]
-    
     let viewModel = BountyViewModel()
     
     // sagueWay 수행 준비 함수
@@ -175,7 +159,7 @@ class BountyViewModel {
     }
     
     func bountyInfo(at index: Int) -> BountyInfo{
-        //        return bountyInfoList[index]
-                return sortedList[index]
+        // return bountyInfoList[index]
+        return sortedList[index]
     }
 }
