@@ -31,46 +31,48 @@ class DetailViewController: UIViewController {
     }
     
     private func prepareAnimation() {
-        // nameLabel의 초기 X 좌표를 view 밖으로 내보낸뒤 안으로 들어오는 애니메이션 생성.
-        nameLabelCenterX.constant = view.bounds.width
-        bountyLabelCenterX.constant = view.bounds.width
+        // 해당 Label 위치 이동
+        nameLabel.transform = CGAffineTransform(translationX: view.bounds.width, // X 축 이동
+                                                y: 0 // Y 이동
+        ).scaledBy(
+            x: 3, y: 3
+        ).rotated(by: 180)
+        bountyLabel.transform = CGAffineTransform(translationX: view.bounds.width, y: 0).scaledBy(x: 3, y: 3).rotated(by: 180)
+    
+        // alpha setting (투명도)
+        nameLabel.alpha = 0
+        bountyLabel.alpha = 0
     }
     
     private func showAnimation() {
-        nameLabelCenterX.constant = 0
-        bountyLabelCenterX.constant = 0
-
-//        // animation 간단 옵션.
-//        UIView.animate(withDuration: 0.3) {
-//            self.view.layoutIfNeeded()
-//        }
+        // Animation 부여
+        UIView.animate(withDuration: 1,
+                               delay: 0,
+                               usingSpringWithDamping: 0.6, // 스프링 반동 애니메이션 추가 가능.
+                               initialSpringVelocity: 2,
+                               options: .allowAnimatedContent,
+                               animations: {
+                                    self.nameLabel.transform = CGAffineTransform.identity
+                                    self.nameLabel.alpha = 1
+                                },
+                               completion: nil
+                )
         
-        // animation 풀 옵션
-//        UIView.animate(withDuration: 0.3, // 애니매이션의 진행 시간.
-//                       delay: 0.1, // 애니메이션의 시간 딜레이
-//                       options: .curveEaseIn, // Easing 에 대한 옵션
-//                       animations: {
-//            self.view.layoutIfNeeded()
-//        },
-//                       completion: nil // 애니메이션이 끝나고 난 이후 작업에 대해서
-//        )
+        UIView.animate(withDuration: 1,
+                               delay: 0.1,
+                               usingSpringWithDamping: 0.6, // 스프링 반동 애니메이션 추가 가능.
+                               initialSpringVelocity: 2,
+                               options: .allowAnimatedContent,
+                               animations: {
+                                    self.bountyLabel.transform = CGAffineTransform.identity
+                                    self.bountyLabel.alpha = 1
+                                },
+                               completion: nil
+                )
         
-        // Easing 값의 속성을 custom할 수 있는 method
-        UIView.animate(withDuration: 0.5,
-                       delay: 0.2,
-                       usingSpringWithDamping: 0.6, // 스프링 반동 애니메이션 추가 가능.
-                       initialSpringVelocity: 2,
-                       options: .allowAnimatedContent,
-                       animations: {
-                            self.view.layoutIfNeeded()
-                        },
-                       completion: nil
-        )
-        
-        // img 회전하는 animation
-        UIView.transition(with: imgView, duration: 0.3,
-                          options: .transitionFlipFromLeft,
-                          animations: nil, completion: nil)
+        // StoryBoard에서 설정 해 놓은 값
+        nameLabel.transform = CGAffineTransform.identity
+        bountyLabel.transform = CGAffineTransform.identity
         
     }
     
