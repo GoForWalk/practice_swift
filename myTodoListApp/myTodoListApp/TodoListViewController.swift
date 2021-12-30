@@ -16,7 +16,8 @@ class TodoListViewController: UIViewController {
     @IBOutlet weak var isTodayButton: UIButton!
     @IBOutlet weak var addButton: UIButton!
 
-    // TODO: TodoViewModel 만들기
+    // [x] TODO: TodoViewModel 만들기
+    let todoListViewModel = TodoViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +25,7 @@ class TodoListViewController: UIViewController {
         // TODO: 키보드 디텍션
         
         // TODO: 데이터 불러오기
-        
+        todoListViewModel.loadTasks()
     }
 
     @IBAction func isTodayButtonTapped(_ sender: Any) {
@@ -51,12 +52,17 @@ extension TodoListViewController {
 extension TodoListViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         // TODO: 세션 몇 개?
-        return 2
+        return todoListViewModel.numOfSection
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // TODO: 섹션 별 item 몇 개?
-        return 10
+        
+        if section == 0 {
+            return todoListViewModel.todayTodos.count
+        } else {
+            return todoListViewModel.upcomingTodos.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -64,11 +70,18 @@ extension TodoListViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TodoListCell", for: indexPath) as? TodoListCell else {
             return UICollectionViewCell()
         }
-        return cell
-        
-        // TODO: todo 를 이용해서 updateUI
-        // TODO: doneButtonHandler 작성
-        // TODO: deleteButtonHandler 작성
+//        return cell
+        var todo: Todo
+        if indexPath.section == 0 {
+            todo = todoListViewModel.todayTodos[indexPath.item]
+        } else {
+            todo = todoListViewModel.upcomingTodos[indexPath.item]
+        }
+        cell.updateUI(todo: todo)
+        // [x]custom cell
+        // [x]TODO: todo를 이용해서 updateUI
+        // [ ]TODO: doneButtonHandler 작성
+        // [ ]TODO: deleteButtonHandler 작성
         return cell
     }
     
@@ -123,7 +136,7 @@ class TodoListCell: UICollectionViewCell {
         // TODO: cell update 하기
         checkButton.isSelected = todo.isDone
         descriptionLabel.text = todo.detail
-        descriptionLabel.alpha = todo.isDone ? 0.2 : 1
+        descriptionLabel.alpha = todo.isDone ? 0.2 : 1 // isDone = True 이면 투명도 0.2
         deleteButton.isHidden = todo.isDone == false
         showStrikeThrough(todo.isDone)
     }
@@ -138,15 +151,30 @@ class TodoListCell: UICollectionViewCell {
     
     func reset() {
         // TODO: Logic 구현
+        // 초기 화면에 나타낼 reset
+        // storyboard 에서 깨어났을때, 한번 reset 후 화면에 display 된다.
+        descriptionLabel.alpha = 1 // 투명도 0
+        deleteButton.isHidden = true // 삭제버튼 숨기기
+        showStrikeThrough(false) // strikeThrough 안보이게 시작
     }
     
     @IBAction func  checkButtonTapped(_ sender: Any) {
         // TODO: checkButton 처리
+        // view update closure
+        checkButton.isSelected = !checkButton.isSelected
+        let isDone = checkButton.isSelected
+        showStrikeThrough(isDone)
+        descriptionLabel.alpha = isDone ? 0.2 : 1
+        deleteButton.isHidden = !isDone
         
+        // data update closure
+        doneButtonTapHandler?(isDone) // handler
     }
     
     @IBAction func deleteButtonTapped(_ sender: Any) {
         // TODO: deleteButton 처리
+        // view에서는 삭제하지 않고, 원래 data에서 삭제하고 view를 reset 하는 방식으로 한다.
+        // 여기는 view 객체이기 때문에, 여기서 처리해줄 것은 딱히 없다.
         deleteButtonTapHandler?()
     }
 
