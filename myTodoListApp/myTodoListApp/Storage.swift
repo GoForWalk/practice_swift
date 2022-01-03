@@ -33,7 +33,6 @@ public class Storage {
     // TODO: Codable 설명, JSON Type
     // TODO: Codable encode
     // TODO: Data 타입은 파일 형태로 저장 가능
-    
     static func store<T: Encodable>(_ obj: T, to directory: Directory, as fileName: String) {
         let url = directory.url.appendingPathComponent(fileName, isDirectory: false)
         print("---> save to here: \(url)")

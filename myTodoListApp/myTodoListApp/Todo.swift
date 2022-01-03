@@ -77,12 +77,13 @@ class TodoManager {
     }
     
     func saveTodo(){
-        // TODO: Storage 작성 이후에 추가 작성
-        
+        Storage.store(todos, to: .documets, as: "todos.json")
     }
     
     func retrieveTodo() {
-        // TODO: Storage 작성 이후에 추가 작성
+        todos = Storage.retrive("todos.json", from: .documets, as: [Todo].self) ?? []
+        let lastId = todos.last?.id ?? 0
+        TodoManager.lastId = lastId
     }
     
 }
@@ -127,8 +128,13 @@ class TodoViewModel { // TODO: enum의 역할?
         manager.deleteTodo(todo)
     }
     
+    func updateTodo(_ todo: Todo){
+        manager.updateTodo(todo)
+    }
+    
     func loadTasks(){
         manager.retrieveTodo()
     }
+    
     
 }
