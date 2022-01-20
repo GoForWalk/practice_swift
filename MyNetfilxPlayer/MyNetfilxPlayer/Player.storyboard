@@ -1,30 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17150" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_7" orientation="landscape" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17122"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Player View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController id="Y6W-OH-hqX" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlayerViewController" id="Y6W-OH-hqX" customClass="PlayerViewController" customModule="MyNetfilxPlayer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="926" height="428"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="039-06-tuY" customClass="PlayerView" customModule="MyNetfilxPlayer" customModuleProvider="target">
+                                <rect key="frame" x="44" y="0.0" width="838" height="428"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UVx-W6-4VF">
+                                <rect key="frame" x="44" y="0.0" width="838" height="428"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g13-84-xJc" userLabel="PlayButton">
+                                        <rect key="frame" x="399" y="194" width="40" height="40"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="0yb-as-5aa"/>
+                                            <constraint firstAttribute="width" constant="40" id="gHO-nF-dg7"/>
+                                        </constraints>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" image="play.fill" catalog="system">
+                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30"/>
+                                        </state>
+                                        <state key="selected" image="pause.fill" catalog="system">
+                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="togglePlayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="L47-4d-EvQ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vel-VZ-JOc" userLabel="XmarkButton">
+                                        <rect key="frame" x="782" y="25" width="40" height="40"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="CFn-Oa-uiD"/>
+                                            <constraint firstAttribute="width" constant="40" id="pG0-AS-7NT"/>
+                                        </constraints>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" image="xmark" catalog="system">
+                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="closeButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="itO-qJ-PGJ"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="g13-84-xJc" firstAttribute="centerY" secondItem="UVx-W6-4VF" secondAttribute="centerY" id="AIP-R3-orA"/>
+                                    <constraint firstAttribute="trailing" secondItem="Vel-VZ-JOc" secondAttribute="trailing" constant="16" id="H3H-L8-EXD"/>
+                                    <constraint firstItem="g13-84-xJc" firstAttribute="centerX" secondItem="UVx-W6-4VF" secondAttribute="centerX" id="pxF-aN-kXe"/>
+                                    <constraint firstItem="Vel-VZ-JOc" firstAttribute="top" secondItem="UVx-W6-4VF" secondAttribute="top" constant="25" id="xJO-LW-rqH"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="039-06-tuY" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="0Sc-xH-DZ6"/>
+                            <constraint firstAttribute="bottom" secondItem="039-06-tuY" secondAttribute="bottom" id="851-ka-Xj3"/>
+                            <constraint firstItem="039-06-tuY" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="KgO-L1-sfe"/>
+                            <constraint firstItem="039-06-tuY" firstAttribute="width" secondItem="UVx-W6-4VF" secondAttribute="width" id="M1g-DE-jDv"/>
+                            <constraint firstItem="039-06-tuY" firstAttribute="top" secondItem="UVx-W6-4VF" secondAttribute="top" id="Zfg-Yp-L6z"/>
+                            <constraint firstItem="039-06-tuY" firstAttribute="height" secondItem="UVx-W6-4VF" secondAttribute="height" id="juX-VM-XcO"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="039-06-tuY" secondAttribute="trailing" id="r8U-vo-Ej7"/>
+                            <constraint firstItem="039-06-tuY" firstAttribute="leading" secondItem="UVx-W6-4VF" secondAttribute="leading" id="uU9-K6-ruA"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="controlView" destination="UVx-W6-4VF" id="9T3-5O-F0p"/>
+                        <outlet property="playButton" destination="g13-84-xJc" id="1tw-K4-Yx0"/>
+                        <outlet property="playerView" destination="039-06-tuY" id="UrU-LQ-qNS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="138.01295896328295" y="89.719626168224295"/>
         </scene>
     </scenes>
     <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
+        <image name="pause.fill" catalog="system" width="116" height="128"/>
+        <image name="play.fill" catalog="system" width="116" height="128"/>
+        <image name="xmark" catalog="system" width="128" height="113"/>
     </resources>
 </document>

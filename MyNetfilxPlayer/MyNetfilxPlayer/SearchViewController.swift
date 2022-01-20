@@ -6,24 +6,99 @@
 //
 
 import UIKit
+import Kingfisher // kingfisher Import
+import AVFoundation
 
 class SearchViewController: UIViewController {
-
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var resultCollectionView: UICollectionView!
-
+    
+    var movies: [Movie] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
     
 //  viewController 누르면 키보드 내려가게 구현
-    @IBAction func tapBG (_ sender: Any) {
-        searchBar.resignFirstResponder()
+//    @IBAction func tapBG (_ sender: Any) {
+//        searchBar.resignFirstResponder()
+//    }
+}
+
+extension SearchViewController: UICollectionViewDataSource {
+    // 넘어오는 data 갯수
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return movies.count
     }
+    // 구현 방법에 대한 코드
+    // dequeueReusable
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ResultCell", for: indexPath)
+                as? ResultCell else { return UICollectionViewCell() }
+        // cell update
+        let movie = movies[indexPath.item]
+        let url = URL(string: movie.thumbnailPath)!
+        
+        // 이미지 path -> image 로 가져오는 작업
+        // 직접 구현 해보기 & 외부 코드 가져다 쓰기(서드파티) -> Kingfisher
+        // SPM (Swift Package Manager), Cocoa Pod, Carthage -> 외부 코드 가져와서 사용할 수 있다.
+        
+        // kingfisher 사용
+        cell.movieThumbnail.kf.setImage(with: url)
+        return cell
+    }
+    
+    
+}
+
+extension SearchViewController: UICollectionViewDelegate {
+    // tap 했을 경우 작업 수행
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // movie
+        // player vc (viewController)
+        // player vc + movie
+        // presenting Player vc
+        let movie = movies[indexPath.item]
+        let url = URL(string: movie.previewURL)!
+        let item = AVPlayerItem(url: url)
+        print("---> movie url \(movie.thumbnailPath)")
+        
+        let sb = UIStoryboard(name: "Player", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "PlayerViewController") as! PlayerViewController
+        // modal style (modal default -> custom)
+        vc.modalPresentationStyle = .fullScreen
+        
+        vc.player.replaceCurrentItem(with: item)
+        // vc presenting
+        present(vc, animated: false, completion: nil)
+    }
+}
+
+extension SearchViewController: UICollectionViewDelegateFlowLayout {
+    // 각 cell 의 Size 조절
+    // 3개의 cell 표시
+    // cell 간 spacing = 10 / controllView 의 margin = 8
+    // width : height = 7 : 10
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let margin: CGFloat = 8
+        let itemSpacing: CGFloat = 10
+        
+        let width = (collectionView.bounds.width - margin * 2 - itemSpacing * 2 ) / 3
+        let height = width * 10 / 7
+        return CGSize(width: width, height: height)
+    }
+}
+
+class ResultCell: UICollectionViewCell {
+    @IBOutlet weak var movieThumbnail: UIImageView!
+    
+    
+    
+    
+    
 }
 
 extension SearchViewController: UISearchBarDelegate {
@@ -34,7 +109,6 @@ extension SearchViewController: UISearchBarDelegate {
         // 검색 누르면 키보드 내려가게 구현
         searchBar.resignFirstResponder()
     }
-    
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // search 버튼 누르는 순간
@@ -55,9 +129,15 @@ extension SearchViewController: UISearchBarDelegate {
         // instance method
         
         // type method
-        SearchAPI.search(searchTerm) {movies in
+        SearchAPI.search(searchTerm) {movies in // netWork Thread
             // collectionView로 표현하기
             print("---> SearchAPI.search / resultCount: \(movies.count), First Movie Title: \(movies.first?.title)")
+            
+            // 쓰레드 지정
+            DispatchQueue.main.async {
+                self.movies = movies
+                self.resultCollectionView.reloadData() // 화면 새로고침
+            }
         }
         
         print("---> 검색어: \(searchTerm)")
