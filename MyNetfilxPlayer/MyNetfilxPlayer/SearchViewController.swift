@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Kingfisher // kingfisher Import
+import Kingfisher
 import AVFoundation
 
 class SearchViewController: UIViewController {

@@ -27,6 +27,11 @@ class PlayerViewController: UIViewController {
         playerView.player = player
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        play()
+    }
+    
     // play button click 시 toggle
     @IBAction func togglePlayButton(_ sender: Any) {
         if player.isPlaying {
