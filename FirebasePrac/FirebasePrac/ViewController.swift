@@ -13,15 +13,20 @@ class ViewController: UIViewController {
     @IBOutlet weak var dataLabel: UILabel!
     @IBOutlet weak var numOfCustomers: UILabel!
     
+    @IBOutlet weak var createButton: UIButton!
+    @IBOutlet weak var readButton: UIButton!
+    @IBOutlet weak var updateButton: UIButton!
+    @IBOutlet weak var deleteButton: UIButton!
+
     // database connection
     let db = Database.database(url: "https://fir-prac-91fb9-default-rtdb.asia-southeast1.firebasedatabase.app").reference()
+    
+    // update 할때 활용
+    // Read 후 memory에 data 저장
 
     override func viewDidLoad() {
         super.viewDidLoad()
         updateLabel()
-//        saveBasicTypes()
-//        saveCustomers()
-        fetchCustomers()
     } // end viewDidLoad()
     
     func updateLabel() {
@@ -36,6 +41,24 @@ class ViewController: UIViewController {
             }
         }
     } // end updateLabel()
+    
+    @IBAction func createCustomer(_ sender: Any) {
+        saveCustomers()
+    }
+    
+    @IBAction func fetchCustomer(_ sender: Any) {
+        displayFetchData()
+    }
+    
+    @IBAction func updateCustomer(_ sender: Any) {
+        updateCustomers()
+    }
+    
+    @IBAction func deleteCustomer(_ sender: Any) {
+        deleteCustomers()
+    }
+    
+    
 }// end class ViewController
 
 // MARK: Save Data
@@ -51,10 +74,6 @@ extension ViewController {
     }
     
     func saveCustomers() {
-        // 책가게
-        // 사용자 저장
-        // 모델 Customer + Book
-        
         let books = [
             Book(title: "Good to Great", author: "Someone"),
             Book(title: "Hacking Growth", author: "Somebody")
@@ -75,8 +94,12 @@ extension ViewController {
 
 // MARK: Read(Fetch) Data
 extension ViewController {
-    func fetchCustomers() {
+    func fetchCustomers(customersData: @escaping ([Customer]) -> Void) {
+        
         db.child("customers").observeSingleEvent(of: .value) { snapshot in
+            guard snapshot.hasChildren() else {
+                print("---> Error : Customers Data가 존재 하지 않습니다.")
+                return }
             print("--> \(snapshot.value!)")
             
             do {
@@ -84,22 +107,80 @@ extension ViewController {
                 let data = try JSONSerialization.data(withJSONObject: snapshot.value!, options: [])
                 let decoder = JSONDecoder()
                 let customers: [Customer] = try decoder.decode([Customer].self, from: data)
-                DispatchQueue.main.async {
-                    self.numOfCustomers.text = "# Of Customers: \(customers.count)"
-                }
+                customersData(customers)
+                
                 print("---> customers: \(customers.count)")
                 
             } catch let error {
                 print("---> Error: \(error)")
             }
         }
+        
     } // end func fetchCustomers
+    
+    func displayFetchData() {
+        fetchCustomers { dic in
+            print("---> dic : \(dic)")
+            self.numOfCustomers.text = "# Of Customers: \(dic.count)"
+        }
+        
+//        let dic: [Customer] = fetchCustomers(dataStoreCustomer: customersDic)
+//        print("---> dic : \(dic)")
+//        self.numOfCustomers.text = "# Of Customers: \(dic.count)"
+
+    } // end func displayLabel()
 
 } // end extension ViewController
 
+// MARK: Update, Delete
+extension ViewController {
+    func updateBasicTypes() {
+        //        db.child("int").setValue(3){{{
+        //        db.child("double").setValue(3.5)
+        //        db.child("str").setValue("Stri}}}ng value - 여러분 안녕")
+        
+        db.updateChildValues(["int": 6])
+        db.updateChildValues(["double": 6.6])
+        db.updateChildValues(["str": "It is updateed Str"])
+    } // end updateBasicTypes()
+    
+    func updateCustomers() {
+        
+        fetchCustomers { dic in
+            guard dic.isEmpty == false else { return }
+            
+            var customersArray: [Customer] = dic
+            customersArray[0].name = "Min"
+            
+            let dictionary = customersArray.map { $0.toDictionary }
+            self.db.updateChildValues(["customers": dictionary])
+        }
+        
+//        var dic: [Customer] = fetchCustomers(dataStoreCustomer: customersDic)
+//        guard dic.isEmpty == false else { return }
+//        dic[0].name = "Min"
+//
+//        let dictionary = dic.map { $0.toDictionary }
+//        db.updateChildValues(["customers": dictionary])
+//        customers = [] // customer 초기화
+//        dic = []
+//        db.child("customers").child("\(customers[1].id)").updateChildValues(["name" : "newName"])
+    } // end updateCustomers()
+    
+    func deleteBasicTypes() {
+        db.child("int").removeValue()
+        db.child("double").removeValue()
+        db.child("str").removeValue()
+    } // end deleteBasicTypes()
+    
+    func deleteCustomers() {
+        db.child("customers").removeValue()
+    } // end deleteCustomers()
+}
+
 struct Customer: Codable {
     let id: String
-    let name: String
+    var name: String
     let books: [Book]
     
     var toDictionary: [String: Any] {
