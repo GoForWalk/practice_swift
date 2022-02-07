@@ -8,8 +8,11 @@
 import UIKit
 import Kingfisher
 import AVFoundation
+import FirebaseDatabase
 
 class SearchViewController: UIViewController {
+    
+    let db = Database.database(url: "https://mynetfilxplayer-default-rtdb.asia-southeast1.firebasedatabase.app/").reference().child("searchHistory")
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var resultCollectionView: UICollectionView!
@@ -95,10 +98,6 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
 class ResultCell: UICollectionViewCell {
     @IBOutlet weak var movieThumbnail: UIImageView!
     
-    
-    
-    
-    
 }
 
 extension SearchViewController: UISearchBarDelegate {
@@ -137,6 +136,9 @@ extension SearchViewController: UISearchBarDelegate {
             DispatchQueue.main.async {
                 self.movies = movies
                 self.resultCollectionView.reloadData() // 화면 새로고침
+                
+                let timeStamp: Double = Date().timeIntervalSince1970.rounded() // Unix TimeStamp
+                self.db.childByAutoId().setValue(["term": searchTerm, "timestamp": timeStamp])
             }
         }
         

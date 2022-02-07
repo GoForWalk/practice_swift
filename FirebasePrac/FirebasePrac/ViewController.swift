@@ -20,9 +20,6 @@ class ViewController: UIViewController {
 
     // database connection
     let db = Database.database(url: "https://fir-prac-91fb9-default-rtdb.asia-southeast1.firebasedatabase.app").reference()
-    
-    // update 할때 활용
-    // Read 후 memory에 data 저장
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,11 +120,6 @@ extension ViewController {
             print("---> dic : \(dic)")
             self.numOfCustomers.text = "# Of Customers: \(dic.count)"
         }
-        
-//        let dic: [Customer] = fetchCustomers(dataStoreCustomer: customersDic)
-//        print("---> dic : \(dic)")
-//        self.numOfCustomers.text = "# Of Customers: \(dic.count)"
-
     } // end func displayLabel()
 
 } // end extension ViewController
@@ -135,9 +127,6 @@ extension ViewController {
 // MARK: Update, Delete
 extension ViewController {
     func updateBasicTypes() {
-        //        db.child("int").setValue(3){{{
-        //        db.child("double").setValue(3.5)
-        //        db.child("str").setValue("Stri}}}ng value - 여러분 안녕")
         
         db.updateChildValues(["int": 6])
         db.updateChildValues(["double": 6.6])
@@ -155,16 +144,6 @@ extension ViewController {
             let dictionary = customersArray.map { $0.toDictionary }
             self.db.updateChildValues(["customers": dictionary])
         }
-        
-//        var dic: [Customer] = fetchCustomers(dataStoreCustomer: customersDic)
-//        guard dic.isEmpty == false else { return }
-//        dic[0].name = "Min"
-//
-//        let dictionary = dic.map { $0.toDictionary }
-//        db.updateChildValues(["customers": dictionary])
-//        customers = [] // customer 초기화
-//        dic = []
-//        db.child("customers").child("\(customers[1].id)").updateChildValues(["name" : "newName"])
     } // end updateCustomers()
     
     func deleteBasicTypes() {
