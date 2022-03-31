@@ -33,7 +33,6 @@ class BlogListCell: UITableViewCell {
         nameLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
             $0.top.leading.bottom.equalToSuperview().inset(18)
-            $0.width.height.equalTo(80)
         }
         
         thumbnailImageView.snp.makeConstraints {
